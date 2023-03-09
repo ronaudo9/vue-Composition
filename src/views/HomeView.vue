@@ -1,28 +1,15 @@
-<script>
-import axios from "axios";
+<script setup>
 import { RouterLink } from "vue-router";
 import ItemDetail from "../views/ItemDetail.vue";
-import {mapGetters, mapActions } from 'vuex'
-export default {
-  data() {
-    return {
-      products: "products",
-    };
-  },
-  created(){
-    this.product();
-    },
-  methods: {
-    product: function () {
-      this.$store.dispatch("getMessageAction");
-      // console.log(this.$store.dispatch("getMessageAction"))
-      // const vm = this;
-      // axios.get("http://localhost:8001/items").then((response) => {
-      //   vm.products = response.data;
-      // });
-    },
-  },
-};
+import { ref, onMounted } from 'vue'
+import {useStore} from "vuex";
+
+const store = useStore();
+const data = ref(store.dispatch("getMessageAction"));
+
+onMounted(() => {
+     data;
+  })
 </script>
 
 <template>

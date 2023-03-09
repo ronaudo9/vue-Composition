@@ -1,33 +1,29 @@
-<script>
+<script setup>
 import axios from "axios";
 import { useCookies } from "vue3-cookies";
-export default {
-  data() {
-    return {
-      show: 0,
-      user: "user",
-    };
-  },
-  mounted() {
-    this.users();
-  },
-  methods: {
-    users() {
-      const vm = this;
-      const { cookies } = useCookies();
-      let cookie = cookies.get("id");
-      let id = Number(cookie);
-      console.log(id)
-      axios.get("http://localhost:8002/users/" + id).then((response) => {
-        vm.user = response.data;
-        console.log(vm.user);
-      });
-    },
-    thank(){
-      this.$router.push({ path: "/" });
-    },
-  },
-};
+import { ref, onMounted } from "vue";
+import { useRouter } from "vue-router";
+
+const show = ref(0);
+const user = ref("user");
+const router = useRouter();
+
+onMounted(() => {
+  users();
+});
+
+async function users() {
+  const { cookies } = useCookies();
+  let cookie = cookies.get("id");
+  let id = Number(cookie);
+  user.value = await axios
+    .get("http://localhost:8002/users/" + id)
+    .then((response) => response.data);
+}
+
+function thank() {
+  router.push({ path: "/" });
+}
 </script>
 
 <template>
@@ -91,7 +87,7 @@ export default {
         </p>
         <div class="mt-12 md:mt-14 w-full flex justify-center">
           <button
-          @click.prevent="thank"
+            @click.prevent="thank"
             class="w-full sm:w-auto border border-gray-800 text-base font-medium text-gray-800 py-5 px-14 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-800 hover:bg-gray-800 hover:text-white"
           >
             Back to store
