@@ -1,36 +1,27 @@
-<script>
+<script setup>
 import axios from "axios";
 import { useCookies } from "vue3-cookies";
-export default {
-  data() {
-    return {
-      products: "products",
-    };
-  },
-  mounted() {
-    this.history();
-  },
-  methods: {
-    history() {
-      const vm = this;
-      const { cookies } = useCookies();
-      let cookie = cookies.get("id");
-      let id = Number(cookie);
-      axios
-        .get(
-          "http://localhost:8002/purchasesHistory" + "?" + "userId" + "=" + id
-        )
-        .then((response) => {
-          vm.products = response.data;
-        });
-    },
-    items(product) {
-      const id = product.itemId;
-      console.log(id);
-      this.$router.push({ path: `/${id}` });
-    },
-  },
-};
+import { ref, onMounted } from "vue";
+import { useRouter } from "vue-router";
+const router = useRouter();
+
+const products = ref("products");
+onMounted(() => {
+  history();
+});
+
+async function history() {
+  const { cookies } = useCookies();
+  let cookie = cookies.get("id");
+  let id = Number(cookie);
+  products.value = await axios
+    .get("http://localhost:8002/purchasesHistory" + "?" + "userId" + "=" + id)
+    .then((response) => response.data);
+}
+function items(product) {
+  const id = product.itemId;
+  router.push({ path: `/${id}` });
+}
 </script>
 
 <template>

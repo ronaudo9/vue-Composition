@@ -1,96 +1,80 @@
-<script>
+<script setup>
 import { LockClosedIcon } from "@heroicons/vue/20/solid";
 import axios from "axios";
 import { useCookies } from "vue3-cookies";
+import { ref } from "vue";
+import { useRouter } from "vue-router";
+const router = useRouter();
 
-export default {
-  data() {
-    return {
-      user: {
-        email: "",
-        password: "",
-      },
-    };
-  },
-  methods: {
-    signin: function () {
-      const vm = this;
-      axios
-        .get(
-          "http://localhost:8002/users" +
-            "?" +
-            "email" +
-            "=" +
-            vm.user.email +
-            "&" +
-            "password" +
-            "=" +
-            vm.user.password
-        )
-        .then((response) => {
-          let u = response.data;
-          console.log(u);
-          if (u.length == 0) {
-            location.reload();
-            alert("Incorrect email address or password");
-            // return false;
-          }
+const user = ref({
+  email: "",
+  password: "",
+});
 
-          // console.log(u);
-          let id = u[0].id;
+async function signin() {
+  const vm = this;
+  axios
+    .get(
+      "http://localhost:8002/users" +
+        "?" +
+        "email" +
+        "=" +
+        user.value.email +
+        "&" +
+        "password" +
+        "=" +
+        user.value.password
+    )
+    .then((response) => {
+      let u = response.data;
+      console.log(u);
+      if (u.length == 0) {
+        location.reload();
+        alert("Incorrect email address or password");
+      }
+      let id = u[0].id;
 
-          const { cookies } = useCookies();
-          cookies.set("id", id);
-          // this.$emit("isLoggedIn");
-          try {
-            if (id > 0) {
-              this.$router.push({ path: "/" });
-            }
-          } catch (error) {
-            console.log(error.message);
-          }
+      const { cookies } = useCookies();
+      cookies.set("id", id);
+      try {
+        if (id > 0) {
+          router.push({ path: "/" });
+        }
+      } catch (error) {
+        console.log(error.message);
+      }
+    });
+  axios
+    .get(
+      "http://localhost:8002/users" +
+        "?" +
+        "email" +
+        "=" +
+        user.value.email +
+        "&" +
+        "password" +
+        "=" +
+        user.value.password
+    )
+    .then((response) => {
+      let v = response.data;
+      if (v.length == 0) {
+        return false;
+      }
+      console.log(v);
+      let id = v[0].id;
 
-          // this.$router.go({ path: "/", force: true });
-          // this.$router.push({ path: "/" });
-          // this.$router.push({ name: 'UserDetailPage', params: { id: u.id } });
-        });
-      axios
-        .get(
-          "http://localhost:8002/users" +
-            "?" +
-            "email" +
-            "=" +
-            vm.user.email +
-            "&" +
-            "password" +
-            "=" +
-            vm.user.password
-        )
-        .then((response) => {
-          let v = response.data;
-          if (v.length == 0) {
-            return false;
-          }
-          console.log(v);
-          let id = v[0].id;
-
-          const { cookies } = useCookies();
-          let cookie = cookies.get("id");
-          try {
-            if (id > 0) {
-              location.reload();
-            }
-          } catch (error) {
-            console.log(error.message);
-          }
-
-          // else{
-          //   alert("Incorrect email address or password")
-          // }
-        });
-    },
-  },
-};
+      const { cookies } = useCookies();
+      let cookie = cookies.get("id");
+      try {
+        if (id > 0) {
+          location.reload();
+        }
+      } catch (error) {
+        console.log(error.message);
+      }
+    });
+}
 </script>
 
 <template>

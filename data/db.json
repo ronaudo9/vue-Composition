@@ -21,6 +21,17 @@
       "city": "板橋区",
       "streetAddress": "板橋三丁目3-5 板橋ビル302",
       "id": 2
+    },
+    {
+      "firstName": "ケンイチ",
+      "lastName": "松山",
+      "email": "nnn@gmail.com",
+      "password": "nnjjkkmm",
+      "postCode": 2306655,
+      "region": "東京都",
+      "city": "中央区",
+      "streetAddress": "六本木2-3-7",
+      "id": 3
     }
   ],
   "items": [
