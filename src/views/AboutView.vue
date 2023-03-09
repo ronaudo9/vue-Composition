@@ -1,44 +1,40 @@
-<script>
+<script setup>
 import axios from "axios";
 import { useCookies } from "vue3-cookies";
-export default {
-  data() {
-    return {
-      user: {
+import { ref, onMounted } from "vue";
+import { useRouter } from "vue-router";
+const router = useRouter();
+
+
+
+const user = ref( {
         email: "",
         password: "",
-      },
-    };
-  },
-  methods: {
-    signin: function () {
-      const vm = this;
+      });
+
+
+   async function signin() {
       axios
         .get(
           "http://localhost:8002/users" +
             "?" +
             "email" +
             "=" +
-            vm.user.email +
+            user.value.email +
             "&" +
             "password" +
             "=" +
-            vm.user.password
+            user.value.password
         )
         .then((response) => {
           let u = response.data;
           console.log(u);
           let id = u[0].id;
-          console.log(vm.user.email);
-          console.log(vm.user.password);
           const { cookies } = useCookies();
           cookies.set("id", id);
-          this.$router.push({ path: "/" });
-          // this.$router.push({ name: 'UserDetailPage', params: { id: u.id } });
+          router.push({ path: "/" });
         });
-    },
-  },
-};
+    }
 </script>
 
 <template>

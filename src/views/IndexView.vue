@@ -1,32 +1,26 @@
-<script>
+<script setup>
 import axios from "axios";
-export default {
-  data() {
-    return {
-      user: {
-        firstName: "",
-        lastName: "",
-        email: "",
-        password: "",
-        postCode: "",
-        region: "",
-        city: "",
-        streetAddress: "",
-      },
-    };
-  },
-  methods: {
-    createUser: function () {
-      const vm = this;
-      axios.post("http://localhost:8002/users", vm.user).then((response) => {
-        let u = response.data;
-        console.log(u);
-        this.$router.push({ path: "/about" });
-        // this.$router.push({ name: 'UserDetailPage', params: { id: u.id } });
-      });
-    },
-  },
-};
+import { ref, onMounted } from "vue";
+import { useRouter } from "vue-router";
+const router = useRouter();
+
+const user = ref({
+  firstName: "",
+  lastName: "",
+  email: "",
+  password: "",
+  postCode: "",
+  region: "",
+  city: "",
+  streetAddress: "",
+});
+
+async function createUser() {
+  axios
+    .post("http://localhost:8002/users", user.value)
+    .then((response) => response.data)
+    .then(router.push({ path: "/about" }));
+}
 </script>
 <template>
   <div class="mt-10 sm:mt-20">
