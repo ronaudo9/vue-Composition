@@ -1,38 +1,39 @@
-<script>
+<script setup>
 import { useCookies } from "vue3-cookies";
 import axios from "axios";
-export default {
-  data() {
-    return {
-      id: "id",
-    };
-  },
-  created: function () {
-    let vm = this;
-    const { cookies } = useCookies();
-    vm.id = cookies.get("id");
-    console.log(vm.id);
-  },
-  // updated: function(){
-  //   location.reload()
-  // },
-  methods: {
-    logout: function () {
-      const { cookies } = useCookies();
-      cookies.remove("id");
-      // this.$router.go({ path: "/signin", force: true }
-      axios
-        .get("http://localhost:8002/items").then((response) => {
-          //response.dataであるuは使用していない.then(this.$router.push({ path: "/signin" }));を使用したいがために.get("http://localhost:8001/items")を記載。
-          let u = response.data;
-          location.reload();
-        }).then(this.$router.push({ path: "/signin" }));
+import { ref, onMounted } from "vue";
+import { useRouter } from "vue-router";
 
-      //this.$router.push({ path: "/signin" });
-      // .then(() => {location.reload()})
-    },
-  },
-};
+const router = useRouter();
+
+const id = ref("id");
+
+onMounted(() => {
+  create();
+});
+// updated: function(){
+//   location.reload()
+// },
+function create() {
+  const { cookies } = useCookies();
+  id.value = cookies.get("id");
+}
+function logout() {
+  const { cookies } = useCookies();
+  cookies.remove("id");
+  // this.$router.go({ path: "/signin", force: true }
+  axios
+    .get("http://localhost:8002/items")
+    .then((response) => {
+      //response.dataであるuは使用していない.then(this.$router.push({ path: "/signin" }));を使用したいがために.get("http://localhost:8001/items")を記載。
+      let u = response.data;
+      location.reload();
+    })
+    .then(router.push({ path: "/signin" }));
+
+  //this.$router.push({ path: "/signin" });
+  // .then(() => {location.reload()})
+}
 </script>
 
 <template>

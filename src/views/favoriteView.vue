@@ -1,73 +1,66 @@
-<script>
+<script setup>
 import axios from "axios";
 import { useCookies } from "vue3-cookies";
-export default {
-  name: "component",
-  data() {
-    return {
-      show: true,
-      show1: false,
-      show2: false,
-      products: "products",
-      carts: "carts",
-      quantity: "0",
-    };
-  },
-  mounted() {
-    this.product();
-  },
-  methods: {
-    product() {
-      let vm = this;
-      const { cookies } = useCookies();
-      let cookie = cookies.get("id");
-      let userId = Number(cookie);
-      axios
-        .get("http://localhost:8002/favorite" + "?" + "userId" + "=" + userId)
-        .then((response) => {
-          let data = response.data;
-          // if (data.length == 0) {
-          //   return false;
-          // }else{
-          vm.products = data;
-          vm.quantity = data.length;
-          console.log(vm.products);
-          console.log(vm.quantity);
-          // }
-        });
-    },
-    cart(product) {
-      const vm = this;
-      vm.carts = {
-        userId: product.userId,
-        itemId: product.itemId,
-        name: product.name,
-        href: product.href,
-        price: product.price,
-        imageSrc: product.imageSrc,
-        imageAlt: product.imageAlt,
-        deleted: product.deleted,
-        count: product.count,
-        subtotal: product.subtotal,
-      };
-      axios.post("http://localhost:8002/carts", vm.carts).then((response) => {
-        vm.carts = response.data;
-        this.$router.push({ path: "/cart" });
-      });
-    },
-    detail(product) {
-      const id = product.itemId;
-      this.$router.push({ path: `/${id}` });
-    },
-    deleted(product) {
-      const id = product.id;
-      axios.delete("http://localhost:8002/favorite/" + id).then((response) => {
-        console.log(response.data);
-        location.reload();
-      });
-    },
-  },
-};
+import { ref, onMounted } from "vue";
+import { useRouter } from "vue-router";
+
+const router = useRouter();
+
+const show = ref(true);
+const show1 = ref(false);
+const show2 = ref(false);
+const products = ref("products");
+const carts = ref("carts");
+const quantity = ref("0");
+
+onMounted(() => {
+  product();
+});
+
+function product() {
+  const { cookies } = useCookies();
+  let cookie = cookies.get("id");
+  let userId = Number(cookie);
+  axios
+    .get("http://localhost:8002/favorite" + "?" + "userId" + "=" + userId)
+    .then((response) => {
+      let data = response.data;
+      products.value = data;
+      quantity.value = data.length;
+      console.log(products.value);
+      console.log(quantity.value);
+      // }
+    });
+}
+function cart(product) {
+  const vm = this;
+  vm.carts = {
+    userId: product.userId,
+    itemId: product.itemId,
+    name: product.name,
+    href: product.href,
+    price: product.price,
+    imageSrc: product.imageSrc,
+    imageAlt: product.imageAlt,
+    deleted: product.deleted,
+    count: product.count,
+    subtotal: product.subtotal,
+  };
+  axios.post("http://localhost:8002/carts", vm.carts).then((response) => {
+    carts.value = response.data;
+    router.push({ path: "/cart" });
+  });
+}
+function detail(product) {
+  const id = product.itemId;
+  router.push({ path: `/${id}` });
+}
+function deleted(product) {
+  const id = product.id;
+  axios.delete("http://localhost:8002/favorite/" + id).then((response) => {
+    location.reload();
+  });
+}
 </script>
 
 <template>
