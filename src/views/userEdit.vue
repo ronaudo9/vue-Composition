@@ -1,57 +1,57 @@
-<script>
+<script setup>
 import axios from "axios";
 import { useCookies } from "vue3-cookies";
-export default {
-  data() {
-    return {
-      user: {
-        firstName: "",
-        lastName: "",
-        email: "",
-        password: "",
-        postCode: "",
-        region: "",
-        city: "",
-        streetAddress: "",
-      },
-    };
-  },
-  mounted() {
-    this.product();
-  },
-  methods: {
-    createUser: function () {
-      const vm = this;
-      const { cookies } = useCookies();
-      let cookie = cookies.get("id");
-      let id = Number(cookie);
-      axios.patch("http://localhost:8002/users/" + id,{
-        firstName:vm.user.firstName,
-        lastName:vm.user.lastName,
-        email:vm.user.email,
-        password:vm.user.password,
-        postCode:vm.user.postCode,
-        region:vm.user.region,
-        city:vm.user.city,
-        streetAddress:vm.user.streetAddress,
-      }).then((response) => {
-        let u = response.data;
-        console.log(u);
-        this.$router.push({ path: "/" });
-        // this.$router.push({ name: 'UserDetailPage', params: { id: u.id } });
-      });
-    },
-    product(){
-      const vm = this;
-      const { cookies } = useCookies();
-      let cookie = cookies.get("id");
-      let id = Number(cookie);
-      axios.get("http://localhost:8002/users/" + id).then((response) => {
-        vm.user = response.data;
-      });
-    },
-  },
-};
+import { ref, onMounted } from "vue";
+import { useRouter } from "vue-router";
+
+const router = useRouter();
+
+const user = ref({
+  firstName: "",
+  lastName: "",
+  email: "",
+  password: "",
+  postCode: "",
+  region: "",
+  city: "",
+  streetAddress: "",
+});
+
+onMounted(() => {
+  product();
+});
+
+function createUser() {
+  const { cookies } = useCookies();
+  let cookie = cookies.get("id");
+  let id = Number(cookie);
+  axios
+    .patch("http://localhost:8002/users/" + id, {
+      firstName: user.value.firstName,
+      lastName: user.value.lastName,
+      email: user.value.email,
+      password: user.value.password,
+      postCode: user.value.postCode,
+      region: user.value.region,
+      city: user.value.city,
+      streetAddress: user.value.streetAddress,
+    })
+    .then((response) => {
+      let u = response.data;
+      console.log(u);
+      location.reload();
+      // this.$router.push({ name: 'UserDetailPage', params: { id: u.id } });
+    });
+}
+function product() {
+  const vm = this;
+  const { cookies } = useCookies();
+  let cookie = cookies.get("id");
+  let id = Number(cookie);
+  axios.get("http://localhost:8002/users/" + id).then((response) => {
+    user.value = response.data;
+  });
+}
 </script>
 <template>
   <div class="mt-10 sm:mt-20">

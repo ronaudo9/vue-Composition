@@ -1,109 +1,93 @@
-<script>
+<script setup>
 import axios from "axios";
 import { useCookies } from "vue3-cookies";
-export default {
-  data() {
-    return {
-      products: "products",
-      Alltotal: "Alltotal",
-      user: "user",
-      purchaseHistory: "purchase",
-    };
-  },
-  mounted() {
-    this.product();
-    this.customer();
-  },
-  unmounted() {
-    this.transition();
-  },
-  methods: {
-    product: function () {
-      const vm = this;
-      // const path = this.$route.path
-      //   console.log(path)
-      axios
-        .get("http://localhost:8002/purchase" + "?" + "deleted" + "=" + "false")
-        .then((response) => {
-          vm.products = response.data;
-          console.log(vm.products);
-          const priceArray = [];
-          vm.products.forEach((element) => {
-            priceArray.push(element.subtotal);
-          });
+import { ref, onMounted, onUnmounted } from "vue";
+import { useRouter } from "vue-router";
 
-          const sumPrice = priceArray.reduce(
-            (accumulator, currentPrice) => accumulator + currentPrice,
-            0
-          );
-          vm.Alltotal = sumPrice;
-        });
-    },
-    customer() {
-      const vm = this;
-      const { cookies } = useCookies();
-      let cookie = cookies.get("id");
-      let id = Number(cookie);
-      axios.get("http://localhost:8002/users/" + id).then((response) => {
-        vm.user = response.data;
-      });
-    },
-    transition() {
-    //   const path = this.$route.path
-    //   const thank ="/thanks";
-    //     console.log(path)
-    //  if(path == thank){
-    //     console.log("成功")
-    //  }
-      let values = this.products.filter((item) => item.deleted === false);
-      values.forEach((value) => {
-        let id = Number(value.id);
-        axios
-          .delete("http://localhost:8002/purchase/" + id)
-          .then((response) => {
-            console.log(response.data);
-          });
-      });
-    },
-    history() {
-      const vm = this;
+const router = useRouter();
 
-      this.products.forEach((value) => {
-        value.date = new Date().toLocaleString("ja-JP");
-        let values = value;
-        let id = Number(values.id);
-        axios
-          .post("http://localhost:8002/purchasesHistory", values)
-          .then((response) => {
-            vm.purchaseHistory = response.data;
-            console.log(vm.purchaseHistory);
-            // this.$router.push({ path: "/order" });
-          });
-        axios
-          .patch("http://localhost:8002/carts/" + id, {
-            deleted: true,
-          })
-          .then((response) => {
-            let data = response.data;
-            console.log(data);
-          });
+const products = ref("products");
+const Alltotal = ref("Alltotal");
+const user = ref("user");
+const purchaseHistory = ref("purchase");
 
-        axios
-          .patch("http://localhost:8002/purchase/" + id, {
-            deleted: true,
-          })
-          .then((response) => {
-            let data = response.data;
-            console.log(data);
-            this.$router.push({ path: "/thanks" });
-          });
+onMounted(() => {
+  product();
+  customer();
+});
+onUnmounted(() => {
+  transition();
+});
+
+async function product() {
+  axios
+    .get("http://localhost:8002/purchase" + "?" + "deleted" + "=" + "false")
+    .then((response) => {
+      products.value = response.data;
+      const priceArray = [];
+      products.value.forEach((element) => {
+        priceArray.push(element.subtotal);
       });
-    },
-    customerEdit(){
-      this.$router.push({ path: "/customerEdit" });
-    },
-  },
-};
+
+      const sumPrice = priceArray.reduce(
+        (accumulator, currentPrice) => accumulator + currentPrice,
+        0
+      );
+      Alltotal.value = sumPrice;
+    });
+}
+async function customer() {
+  const { cookies } = useCookies();
+  let cookie = cookies.get("id");
+  let id = Number(cookie);
+  axios.get("http://localhost:8002/users/" + id).then((response) => {
+    user.value = response.data;
+  });
+}
+async function transition() {
+  let values = products.value.filter((item) => item.deleted === false);
+  values.forEach((value) => {
+    let id = Number(value.id);
+    axios.delete("http://localhost:8002/purchase/" + id).then((response) => {
+      console.log(response.data);
+    });
+  });
+}
+async function history() {
+  products.value.forEach((value) => {
+    value.date = new Date().toLocaleString("ja-JP");
+    let values = value;
+    let id = Number(values.id);
+    axios
+      .post("http://localhost:8002/purchasesHistory", values)
+      .then((response) => {
+        purchaseHistory.value = response.data;
+        console.log(purchaseHistory.value);
+        // this.$router.push({ path: "/order" });
+      });
+    axios
+      .patch("http://localhost:8002/carts/" + id, {
+        deleted: true,
+      })
+      .then((response) => {
+        let data = response.data;
+        console.log(data);
+      });
+
+    axios
+      .patch("http://localhost:8002/purchase/" + id, {
+        deleted: true,
+      })
+      .then((response) => {
+        let data = response.data;
+        console.log(data);
+        router.push({ path: "/thanks" });
+      });
+  });
+}
+function customerEdit() {
+  router.push({ path: "/customerEdit" });
+}
 </script>
 
 <template>
@@ -477,13 +461,13 @@ export default {
                   <p
                     class="text-base dark:text-white font-semibold leading-4 text-center md:text-left text-gray-800"
                   >
-                  &nbsp;<!-- Billing Address -->
+                    &nbsp;<!-- Billing Address -->
                   </p>
                   <p
                     class="w-48 lg:w-full dark:text-gray-300 xl:w-48 text-center md:text-left text-sm leading-5 text-gray-600"
                   >
-                  &nbsp;<br />&nbsp;<!-- {{ user.region }}{{ user.city }} <br />{{ -->
-                      <!-- user.streetAddress -->
+                    &nbsp;<br />&nbsp;<!-- {{ user.region }}{{ user.city }} <br />{{ -->
+                    <!-- user.streetAddress -->
                     <!-- }} -->
                   </p>
                 </div>
@@ -492,7 +476,7 @@ export default {
                 class="flex w-full justify-center items-center md:justify-start md:items-start"
               >
                 <button
-                @click.prevent="customerEdit"
+                  @click.prevent="customerEdit"
                   class="mt-6 md:mt-0 dark:border-white dark:hover:bg-gray-900 dark:bg-transparent dark:text-white py-5 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-800 border border-gray-800 font-medium w-96 2xl:w-full text-base font-medium leading-4 text-gray-800"
                 >
                   Edit Details

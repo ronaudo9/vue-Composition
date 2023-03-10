@@ -1,170 +1,134 @@
-<script>
+<script setup>
 import axios from "axios";
-// import type { products } from "../types/type";
 import { useCookies } from "vue3-cookies";
-// import type {carts} from "../types/type"
+import { ref, onMounted } from "vue";
+import { useRouter } from "vue-router";
 
-export default {
-  props: {
-    id: Number,
-  },
-  data() {
-    return {
-      products: "products",
-      //  as unknown as products,
-      carts: "carts",
-      favorite: "favorite",
-      // buttonState: false,
-    };
-  },
-  // computed: {
-  //   articles() {
-  //     return this.$store.state.products; // storeから記事データを取得
-  //   },
-  // },
-  created() {
-    this.Products(), this.favorites();
-  },
-  methods: {
-    Products: function () {
-      const vm = this;
-      if (vm.id) {
-        axios.get("http://localhost:8002/items/" + vm.id).then((response) => {
-          vm.products = response.data;
-          const { cookies } = useCookies();
-          let cookie = cookies.get("id");
-          vm.userId = Number(cookie);
-        });
-      }
-    },
-    cart: function () {
-      const vm = this;
-      if (document.cookie == "") {
-        alert("Please sign in");
-        this.$router.push({ path: "/signin" });
-      } else {
-        vm.carts = {
-          userId: this.userId,
-          itemId: this.products.id,
-          name: this.products.name,
-          href: this.products.href,
-          price: this.products.price,
-          imageSrc: this.products.imageSrc,
-          imageAlt: this.products.imageAlt,
-          deleted: false,
-          count: 1,
-          subtotal: this.products.subtotal,
-        };
-        axios.post("http://localhost:8002/carts", vm.carts).then((response) => {
-          vm.carts = response.data;
-          this.$router.push({ path: "/cart" });
-        });
-      }
-    },
-    favorites() {
-      let vm = this;
+const router = useRouter();
+
+const props = defineProps({
+  id: Number,
+});
+
+const products = ref("products");
+const carts = ref("carts");
+const favorite = ref("favorite");
+const fav = ref(false);
+const userId = ref("userId");
+
+onMounted(() => {
+  Products();
+  favorites();
+});
+
+function Products() {
+  const vm = this;
+  if (props.id) {
+    axios.get("http://localhost:8002/items/" + props.id).then((response) => {
+      products.value = response.data;
       const { cookies } = useCookies();
       let cookie = cookies.get("id");
-      let userId = Number(cookie);
-      console.log(userId);
-      axios
-        .get(
-          "http://localhost:8002/favorite" +
-            "?" +
-            "itemId" +
-            "=" +
-            vm.id +
-            "&" +
-            "userId" +
-            "=" +
-            userId
-        )
-        .then((response) => {
-          let u = response.data;
-          if (u.length == 0) {
-            return false;
-          } else {
-            vm.favorite = u;
-            console.log(vm.favorite);
-          }
-        });
-    },
-    changeState() {
-      // this.buttonState = !this.buttonState;
-      const vm = this;
-      //   if(!this.buttonState){
-      //   vm.favorite = {
-      //     userId: this.userId,
-      //     itemId: this.products.id,
-      //     name: this.products.name,
-      //     href: this.products.href,
-      //     price: this.products.price,
-      //     imageSrc: this.products.imageSrc,
-      //     imageAlt: this.products.imageAlt,
-      //     deleted: false,
-      //     count: 1,
-      //     subtotal: this.products.subtotal,
-      //   };
-      //   axios.post("http://localhost:8001/favorite", vm.carts).then((response) => {
-      //     vm.favorite = response.data;
-      //     console.log(vm.favorite);
-      //   });
-      // }
-      if (this.favorite.length == 1) {
-        let vm = this;
-        let id2 = Number(this.userId) + "." + Number(this.products.id);
-        console.log(id2);
-        let id = Number(id2);
-        console.log(id);
-        const { cookies } = useCookies();
-        let cookie = cookies.get("id");
-        let userId = Number(cookie);
-        axios
-          .delete("http://localhost:8002/favorite/" + id)
-          .then((response) => {
-            console.log(response.data);
-            location.reload();
-          });
-      } else {
-        let vm = this;
-        let id2 = Number(this.userId) + "." + Number(this.products.id);
-        console.log(id2);
-        let id = Number(id2);
-        console.log(id);
-        vm.carts = {
-          userId: this.userId,
-          itemId: this.products.id,
-          name: this.products.name,
-          href: this.products.href,
-          price: this.products.price,
-          imageSrc: this.products.imageSrc,
-          imageAlt: this.products.imageAlt,
-          deleted: false,
-          count: 1,
-          subtotal: this.products.subtotal,
-          id: id,
-        };
-        axios
-          .post("http://localhost:8002/favorite", vm.carts)
-          .then((response) => {
-            console.log(response.data);
-            location.reload();
-          });
-      }
-    },
-  },
+      userId.value = Number(cookie);
+    });
+  }
+}
+function cart() {
+  const vm = this;
+  if (document.cookie == "") {
+    alert("Please sign in");
+    router.push({ path: "/signin" });
+  } else {
+    carts.value = {
+      userId: userId.value,
+      itemId: products.value.id,
+      name: products.value.name,
+      href: products.value.href,
+      price: products.value.price,
+      imageSrc: products.value.imageSrc,
+      imageAlt: products.value.imageAlt,
+      deleted: false,
+      count: 1,
+      subtotal: products.value.subtotal,
+    };
+    axios.post("http://localhost:8002/carts", carts.value).then((response) => {
+      carts.value = response.data;
+      router.push({ path: "/cart" });
+    });
+  }
+}
+function favorites() {
+  let vm = this;
 
-  // computed: {
-  //   ArticleData() {
-  //     const dataId = parseInt(this.$route.params.id, 10);
-  //     const data = this.$store.state.products.find((a) => a.id === dataId);
-  //     return data;
-  //   },
-  // },
-  // components: {
-  //   ItemDetail,
-  // },
-};
+  const { cookies } = useCookies();
+  let cookie = cookies.get("id");
+  let userId = Number(cookie);
+  axios
+    .get(
+      "http://localhost:8002/favorite" +
+        "?" +
+        "itemId" +
+        "=" +
+        props.id +
+        "&" +
+        "userId" +
+        "=" +
+        userId
+    )
+    .then((response) => {
+      favorite.value = response.data;
+      console.log(favorite.value)
+      // if (u.length == 0) {
+      //   return false;
+      // } else {
+      //   favorite.value = u;
+      //   console.log(favorite.value)
+      // }
+    })
+}
+function changeState() {
+  const vm = this;
+
+  if (favorite.value.length == 1) {
+    let vm = this;
+
+    let id2 = Number(userId.value) + "." + Number(products.value.id);
+    console.log(id2);
+    let id = Number(id2);
+    console.log(id);
+    // const { cookies } = useCookies();
+    // let cookie = cookies.get("id");
+    // let userId = Number(cookie);
+    axios.delete("http://localhost:8002/favorite/" + id).then((response) => {
+      console.log(response.data);
+      location.reload();
+    });
+  } else {
+    let vm = this;
+    let id2 = Number(userId.value) + "." + Number(products.value.id);
+    console.log(id2);
+    let id = Number(id2);
+    console.log(id);
+    carts.value = {
+      userId: userId.value,
+      itemId: products.value.id,
+      name: products.value.name,
+      href: products.value.href,
+      price: products.value.price,
+      imageSrc: products.value.imageSrc,
+      imageAlt: products.value.imageAlt,
+      deleted: false,
+      count: 1,
+      subtotal: products.value.subtotal,
+      id: id,
+    };
+    axios
+      .post("http://localhost:8002/favorite", carts.value)
+      .then((response) => {
+        console.log(response.data);
+        location.reload();
+      });
+  }
+}
 </script>
 
 <template>
@@ -359,7 +323,7 @@ export default {
               @click.prevent="changeState"
               class="rounded-full w-10 h-10 bg-gray-200 p-0 border-0 inline-flex items-center justify-center text-gray-500 ml-4"
             >
-              <div v-if="this.favorite.length == 1">
+              <div v-if="favorite.length == 1">
                 <svg
                   fill="currentColor"
                   stroke-linecap="round"

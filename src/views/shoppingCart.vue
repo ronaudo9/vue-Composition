@@ -1,88 +1,93 @@
-<script>
+<script setup>
 import axios from "axios";
 import { useCookies } from "vue3-cookies";
-export default {
-  data() {
-    return {
-      products: "products",
-      count: "1",
-      purchase: "purchase",
-      Alltotal: "Alltotal",
-    };
-  },
-  mounted() {
-    this.product();
-  },
-  methods: {
-    product: function () {
-      const vm = this;
-      const { cookies } = useCookies();
-      let cookie = cookies.get("id");
-      let id = Number(cookie);
-      axios
-        .get("http://localhost:8002/carts" + "?" + "userId" + "=" + id + "&" + "deleted" + "=" + "false")
-        .then((response) => {
-          vm.products = response.data;
+import { ref, onMounted } from "vue";
+import { useRouter } from "vue-router";
 
-          const priceArray = [];
-          vm.products.forEach((element) => {
-            priceArray.push(element.subtotal);
-          });
+const router = useRouter();
 
-          const sumPrice = priceArray.reduce(
-            (accumulator, currentPrice) => accumulator + currentPrice,0
-          );
-          vm.Alltotal = sumPrice;
-        });
-    },
+const products = ref("products");
+const count = ref("1");
+const purchase = ref("purchase");
+const Alltotal = ref("Alltotal");
 
+onMounted(() => {
+  product();
+});
 
-    increment(product) {
-      // this.count = Number(this.count)+Number(product.count);
-      product.count++;
-      let prices = product.price.slice(1);
-      let price = Number(prices);
-      product.subtotal = product.count * price;
-      this.Alltotal = this.Alltotal + price;
-    },
-    decrement(product) {
-      if (product.count > 1) {
-        product.count--;
-        let prices = product.price.slice(1);
-        let price = Number(prices);
-        product.subtotal = product.count * price;
-        this.Alltotal = this.Alltotal - price;
-      }
-    },
-    purchases() {
-      const vm = this;
+function product() {
+  const vm = this;
+  const { cookies } = useCookies();
+  let cookie = cookies.get("id");
+  let id = Number(cookie);
+  axios
+    .get(
+      "http://localhost:8002/carts" +
+        "?" +
+        "userId" +
+        "=" +
+        id +
+        "&" +
+        "deleted" +
+        "=" +
+        "false"
+    )
+    .then((response) => {
+      products.value = response.data;
 
-      this.purchase = this.products;
-      this.purchase.forEach((value)=> {
-        let values = value
-        axios
-        .post("http://localhost:8002/purchase",values )
-        .then((response) => {
-          vm.purchase = response.data;
-          console.log(vm.purchase);
-          this.$router.push({ path: "/order" });
-        });
-      })
-    },
-    Delete(product){
-      const vm = this;
-      const id = product.id;
-      console.log(product)
+      const priceArray = [];
+      products.value.forEach((element) => {
+        priceArray.push(element.subtotal);
+      });
 
-      axios.patch("http://localhost:8002/carts/" + id,{
-          deleted: true,
-  }).then((response) => {
-          let data = response.data;
-           location.reload();
-        });
-    },
-  },
-};
+      const sumPrice = priceArray.reduce(
+        (accumulator, currentPrice) => accumulator + currentPrice,
+        0
+      );
+      Alltotal.value = sumPrice;
+    });
+}
+
+function increment(product) {
+  // this.count = Number(this.count)+Number(product.count);
+  product.count++;
+  let prices = product.price.slice(1);
+  let price = Number(prices);
+  product.subtotal = product.count * price;
+  Alltotal.value = Alltotal.value + price;
+}
+function decrement(product) {
+  if (product.count > 1) {
+    product.count--;
+    let prices = product.price.slice(1);
+    let price = Number(prices);
+    product.subtotal = product.count * price;
+    Alltotal.value = Alltotal.value - price;
+  }
+}
+function purchases() {
+  purchase.value = products.value;
+  purchase.value.forEach((value) => {
+    let values = value;
+    axios.post("http://localhost:8002/purchase", values).then((response) => {
+      purchase.value = response.data;
+      console.log(purchase.value);
+      router.push({ path: "/order" });
+    });
+  });
+}
+function Delete(product) {
+  const id = product.id;
+
+  axios
+    .patch("http://localhost:8002/carts/" + id, {
+      deleted: true,
+    })
+    .then((response) => {
+      let data = response.data;
+      location.reload();
+    });
+}
 </script>
 
 <template>
@@ -186,7 +191,7 @@ export default {
                 </div>
 
                 <button
-                @click.prevent="Delete(product)"
+                  @click.prevent="Delete(product)"
                   class="text-indigo-500 hover:text-indigo-600 active:text-indigo-700 text-sm font-semibold select-none transition duration-100"
                 >
                   Delete

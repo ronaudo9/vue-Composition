@@ -85,6 +85,19 @@
       "count": 1,
       "subtotal": 35,
       "id": 2.4
+    },
+    {
+      "userId": 2,
+      "itemId": 3,
+      "name": "Focus Paper Refill",
+      "href": "#",
+      "price": "$89",
+      "imageSrc": "https://tailwindui.com/img/ecommerce-images/category-page-04-image-card-03.jpg",
+      "imageAlt": "Person using a pen to cross a task off a productivity paper card.",
+      "deleted": false,
+      "count": 1,
+      "subtotal": 89,
+      "id": 2.3
     }
   ],
   "carts": [
@@ -435,7 +448,7 @@
       "price": "$48",
       "imageSrc": " https://tailwindui.com/img/ecommerce-images/category-page-04-image-card-01.jpg",
       "imageAlt": "Tall slender porcelain bottle with natural clay textured body and cork stopper.",
-      "deleted": false,
+      "deleted": true,
       "count": 1,
       "subtotal": 48,
       "id": 33
@@ -448,7 +461,7 @@
       "price": "$48",
       "imageSrc": " https://tailwindui.com/img/ecommerce-images/category-page-04-image-card-01.jpg",
       "imageAlt": "Tall slender porcelain bottle with natural clay textured body and cork stopper.",
-      "deleted": false,
+      "deleted": true,
       "count": 1,
       "subtotal": 48,
       "id": 34
@@ -461,7 +474,7 @@
       "price": "$89",
       "imageSrc": "https://tailwindui.com/img/ecommerce-images/category-page-04-image-card-03.jpg",
       "imageAlt": "Person using a pen to cross a task off a productivity paper card.",
-      "deleted": false,
+      "deleted": true,
       "count": 1,
       "subtotal": 89,
       "id": 35
@@ -474,7 +487,7 @@
       "price": "$89",
       "imageSrc": "https://tailwindui.com/img/ecommerce-images/category-page-04-image-card-03.jpg",
       "imageAlt": "Person using a pen to cross a task off a productivity paper card.",
-      "deleted": false,
+      "deleted": true,
       "count": 1,
       "subtotal": 89,
       "id": 36
@@ -487,10 +500,62 @@
       "price": "$35",
       "imageSrc": "https://tailwindui.com/img/ecommerce-images/category-page-04-image-card-02.jpg",
       "imageAlt": " Olive drab green insulated bottle with flared screw lid and flat top.",
-      "deleted": false,
+      "deleted": true,
       "count": 1,
       "subtotal": 35,
       "id": 37
+    },
+    {
+      "userId": 2,
+      "itemId": 1,
+      "name": "Earthen Bottle",
+      "href": "#",
+      "price": "$48",
+      "imageSrc": " https://tailwindui.com/img/ecommerce-images/category-page-04-image-card-01.jpg",
+      "imageAlt": "Tall slender porcelain bottle with natural clay textured body and cork stopper.",
+      "deleted": false,
+      "count": 1,
+      "subtotal": 48,
+      "id": 38
+    },
+    {
+      "userId": 2,
+      "itemId": 3,
+      "name": "Focus Paper Refill",
+      "href": "#",
+      "price": "$89",
+      "imageSrc": "https://tailwindui.com/img/ecommerce-images/category-page-04-image-card-03.jpg",
+      "imageAlt": "Person using a pen to cross a task off a productivity paper card.",
+      "deleted": true,
+      "count": 1,
+      "subtotal": 89,
+      "id": 39
+    },
+    {
+      "userId": 2,
+      "itemId": 4,
+      "name": "Machined Mechanical Pencil",
+      "href": "#",
+      "price": "$35",
+      "imageSrc": "https://tailwindui.com/img/ecommerce-images/category-page-04-image-card-04.jpg",
+      "imageAlt": "Hand holding black machined steel mechanical pencil with brass tip and top.",
+      "deleted": false,
+      "count": 1,
+      "subtotal": 35,
+      "id": 40
+    },
+    {
+      "userId": 2,
+      "itemId": 1,
+      "name": "Earthen Bottle",
+      "href": "#",
+      "price": "$48",
+      "imageSrc": " https://tailwindui.com/img/ecommerce-images/category-page-04-image-card-01.jpg",
+      "imageAlt": "Tall slender porcelain bottle with natural clay textured body and cork stopper.",
+      "deleted": true,
+      "count": 1,
+      "subtotal": 48,
+      "id": 41
     }
   ],
   "purchase": [
@@ -530,6 +595,45 @@
       "count": 3,
       "subtotal": 105,
       "id": 21
+    },
+    {
+      "userId": 2,
+      "itemId": 3,
+      "name": "Focus Paper Refill",
+      "href": "#",
+      "price": "$89",
+      "imageSrc": "https://tailwindui.com/img/ecommerce-images/category-page-04-image-card-03.jpg",
+      "imageAlt": "Person using a pen to cross a task off a productivity paper card.",
+      "deleted": true,
+      "count": 2,
+      "subtotal": 178,
+      "id": 35
+    },
+    {
+      "userId": 2,
+      "itemId": 1,
+      "name": "Earthen Bottle",
+      "href": "#",
+      "price": "$48",
+      "imageSrc": " https://tailwindui.com/img/ecommerce-images/category-page-04-image-card-01.jpg",
+      "imageAlt": "Tall slender porcelain bottle with natural clay textured body and cork stopper.",
+      "deleted": true,
+      "count": 2,
+      "subtotal": 96,
+      "id": 34
+    },
+    {
+      "userId": 2,
+      "itemId": 2,
+      "name": "Nomad Tumbler",
+      "href": "#",
+      "price": "$35",
+      "imageSrc": "https://tailwindui.com/img/ecommerce-images/category-page-04-image-card-02.jpg",
+      "imageAlt": " Olive drab green insulated bottle with flared screw lid and flat top.",
+      "deleted": true,
+      "count": 2,
+      "subtotal": 70,
+      "id": 37
     }
   ],
   "purchasesHistory": [
@@ -656,6 +760,48 @@
       "subtotal": 89,
       "id": 28,
       "date": "2023/2/28 11:00:18"
+    },
+    {
+      "userId": 2,
+      "itemId": 3,
+      "name": "Focus Paper Refill",
+      "href": "#",
+      "price": "$89",
+      "imageSrc": "https://tailwindui.com/img/ecommerce-images/category-page-04-image-card-03.jpg",
+      "imageAlt": "Person using a pen to cross a task off a productivity paper card.",
+      "deleted": false,
+      "count": 2,
+      "subtotal": 178,
+      "id": 35,
+      "date": "2023/3/10 10:12:02"
+    },
+    {
+      "userId": 2,
+      "itemId": 2,
+      "name": "Nomad Tumbler",
+      "href": "#",
+      "price": "$35",
+      "imageSrc": "https://tailwindui.com/img/ecommerce-images/category-page-04-image-card-02.jpg",
+      "imageAlt": " Olive drab green insulated bottle with flared screw lid and flat top.",
+      "deleted": false,
+      "count": 2,
+      "subtotal": 70,
+      "id": 37,
+      "date": "2023/3/10 10:12:02"
+    },
+    {
+      "userId": 2,
+      "itemId": 1,
+      "name": "Earthen Bottle",
+      "href": "#",
+      "price": "$48",
+      "imageSrc": " https://tailwindui.com/img/ecommerce-images/category-page-04-image-card-01.jpg",
+      "imageAlt": "Tall slender porcelain bottle with natural clay textured body and cork stopper.",
+      "deleted": false,
+      "count": 2,
+      "subtotal": 96,
+      "id": 34,
+      "date": "2023/3/10 10:12:02"
     }
   ]
 }

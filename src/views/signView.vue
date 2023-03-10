@@ -11,8 +11,7 @@ const user = ref({
   password: "",
 });
 
-async function signin() {
-  const vm = this;
+function signin() {
   axios
     .get(
       "http://localhost:8002/users" +
